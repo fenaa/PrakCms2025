@@ -2,5 +2,12 @@
 
 use App\Http\Controllers\UserController;
 
-Route::resource('pengguna', UserController::class);
-Route::get('/pengguna/{id}/delete', [UserController::class, 'confirmDelete']);
+Route::get('/User', [UserController::class, 'index']);
+Route::get('/User/{id}', [UserController::class, 'show']);
+Route::get('/User/{id}/edit', [UserController::class, 'edit']);
+Route::get('/User/{id}/delete', [UserController::class, 'confirmDelete']);
+
+
+
+
+
