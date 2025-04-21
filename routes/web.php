@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\UserController;
 
-Route::get('/User', [UserController::class, 'index']);
-Route::get('/User/{id}', [UserController::class, 'show']);
-Route::get('/User/{id}/edit', [UserController::class, 'edit']);
-Route::get('/User/{id}/delete', [UserController::class, 'confirmDelete']);
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PelangganController;
 
+Route::get('/', function () {
+    return view('home');
+});
 
-
-
-
+Route::get('/pelanggan', [PelangganController::class, 'index']);
+Route::get('/pelanggan/{id}/show', [PelangganController::class, 'show']);
+Route::get('/pelanggan/{id}/edit', [PelangganController::class, 'edit']);
+Route::get('/pelanggan/{id}/delete', [PelangganController::class, 'destroy']);
