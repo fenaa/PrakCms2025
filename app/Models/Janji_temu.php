@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pelanggan extends Model
+class Janji_temu extends Model
 {
     use HasFactory;
 
     public static function getAll()
     {
-        return Pelanggan::all();
+        return Janji_temu::all();
     }
 
     public static function find($id)
     {
-        return Pelanggan::where('id', $id)->first();
+        return Janji_temu::where('id', $id)->first();
     }
 }

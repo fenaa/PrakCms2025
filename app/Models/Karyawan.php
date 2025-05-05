@@ -5,17 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pelanggan extends Model
+class Karyawan extends Model
 {
     use HasFactory;
 
+    protected $table = 'karyawan'; 
+   
     public static function getAll()
     {
-        return Pelanggan::all();
+        return Karyawan::all();
     }
 
     public static function find($id)
     {
-        return Pelanggan::where('id', $id)->first();
+        return Karyawan::where('id', $id)->first();
     }
 }
+           

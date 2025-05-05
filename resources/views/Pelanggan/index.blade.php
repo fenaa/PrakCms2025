@@ -8,7 +8,6 @@
       <th>Nama</th>
       <th>Alamat</th>
       <th>Jenis Kelamin</th>
-      <th>Nomor Telepon</th>
       <th>Email</th>
       <th>Aksi</th>
     </tr>
@@ -19,7 +18,6 @@
       <td>{{ $p['nama'] }}</td>
       <td>{{ $p['alamat'] }}</td>
       <td>{{ $p['jenis_kelamin'] }}</td>
-      <td>{{ $p['telepon'] }}</td>
       <td>{{ $p['email'] }}</td>
       <td>
         <a href="{{ url('pelanggan/'.$p['id'].'/show') }}" class="btn btn-info btn-sm">Lihat</a>
