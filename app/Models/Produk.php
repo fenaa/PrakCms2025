@@ -2,29 +2,13 @@
 
 namespace App\Models;
 
-class Produk
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Produk extends Model
 {
-    public static function all()
-    {
-        return [
-            [
-                'id' => 123,
-                'jenis' => 'Shampoo',
-                'stok' => 10,
-                'harga' => 50000,
-            ],
-            [
-                'id' => 124,
-                'jenis' => 'Hair Mask',
-                'stok' => 5,
-                'harga' => 75000,
-            ],
-            [
-                'id' => 125,
-                'jenis' => 'Serum Rambut',
-                'stok' => 7,
-                'harga' => 90000,
-            ],
-        ];
-    }
+    use HasFactory;
+
+    protected $table = 'produk';  // nama tabel sesuai migration
+    protected $fillable = ['jenis', 'stok', 'harga'];
 }

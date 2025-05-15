@@ -15,6 +15,6 @@ class KaryawanSeeder extends Seeder
     public function run()
     {
         
-        Karyawan::factory()->count(3)->create();
+        Karyawan::factory()->count(5)->create();
     }
 }
