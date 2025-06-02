@@ -1,15 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Detail Karyawan')
+
 @section('content')
-<h2>Detail Karyawan</h2>
-<ul class="list-group">
-  <li class="list-group-item"><strong>ID:</strong> {{ $karyawan['id'] }}</li> 
-  <li class="list-group-item"><strong>Nama:</strong> {{ $karyawan['nama'] }}</li>
-  <li class="list-group-item"><strong>Jenis Kelamin:</strong> {{ $karyawan['jenis_kelamin'] }}</li>
-  <li class="list-group-item"><strong>Tanggal Bergabung:</strong> {{ $karyawan['tanggal_gabung'] }}</li>
-  <li class="list-group-item"><strong>Gaji:</strong> {{ $karyawan['gaji'] }}</li>
-  <li class="list-group-item"><strong>Telepon:</strong> {{ $karyawan['telepon'] }}</li>
-  <li class="list-group-item"><strong>Email:</strong> {{ $karyawan['email'] }}</li>
+<h1>Detail Karyawan</h1>
+
+<ul>
+    <li><strong>ID:</strong> {{ $karyawan->id_karyawan }}</li>
+    <li><strong>Nama:</strong> {{ $karyawan->nama_karyawan }}</li>
+    <li><strong>Jenis Kelamin:</strong> {{ $karyawan->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</li>
+    <li><strong>Gaji:</strong> {{ number_format($karyawan->gaji_karyawan, 0, ',', '.') }}</li>
+    <li><strong>Tanggal Bergabung:</strong> {{ $karyawan->tanggal_bergabung }}</li>
+    <li><strong>Nomor Telepon:</strong> {{ $karyawan->nomor_telpon }}</li>
+    <li><strong>Email:</strong> {{ $karyawan->email }}</li>
 </ul>
-<a href="/karyawan" class="btn btn-secondary mt-3">Kembali</a>
+
+<a href="{{ route('karyawan.index') }}">⬅️ Kembali</a>
 @endsection

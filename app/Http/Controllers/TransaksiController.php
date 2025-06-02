@@ -2,31 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Transaksi;
+use App\Models\JanjiTemu;
+use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
     public function index()
     {
-        return view('transaksi.index', ['transaksis' => Transaksi::all()]);
+        $transaksis = Transaksi::with('janji_temu')->get();
+        return view('transaksi.index', compact('transaksis'));
     }
 
-    public function show($id)
+    public function create()
     {
-        $data = collect(Transaksi::all())->firstWhere('id', $id);
-        return view('transaksi.show', ['transaksi' => $data]);
+        $janji_temus = JanjiTemu::all();
+        return view('transaksi.create', compact('janji_temus'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'id_janjitemu' => 'required|exists:janji_temus,id_janjitemu',
+            'tanggal_transaksi' => 'required|date',
+            'jumlah_produk' => 'required|integer|min:1',
+            'harga' => 'required|integer|min:0',
+        ], [
+            'id_janjitemu.required' => 'Janji temu wajib dipilih.',
+            'tanggal_transaksi.required' => 'Tanggal transaksi wajib diisi.',
+            'jumlah_produk.required' => 'Jumlah produk wajib diisi.',
+            'harga.required' => 'Harga wajib diisi.',
+        ]);
+
+        $validated['id_transaksi'] = 'TRX' . strtoupper(uniqid());
+
+        Transaksi::create($validated);
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        $data = collect(Transaksi::all())->firstWhere('id', $id);
-        return view('transaksi.edit', ['transaksi' => $data]);
+        $transaksi = Transaksi::findOrFail($id);
+        $janji_temus = JanjiTemu::all();
+        return view('transaksi.edit', compact('transaksi', 'janji_temus'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+
+        $validated = $request->validate([
+            'id_janjitemu' => 'required|exists:janji_temus,id_janjitemu',
+            'tanggal_transaksi' => 'required|date',
+            'jumlah_produk' => 'required|integer|min:1',
+            'harga' => 'required|integer|min:0',
+        ]);
+
+        $transaksi->update($validated);
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $data = collect(Transaksi::all())->firstWhere('id', $id);
-        return view('transaksi.delete', ['transaksi' => $data]);
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->delete();
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus!');
+    }
+
+    public function show($id)
+    {
+        $transaksi = Transaksi::with('janji_temu')->findOrFail($id);
+        return view('transaksi.show', compact('transaksi'));
     }
 }

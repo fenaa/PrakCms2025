@@ -1,12 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Detail Transaksi')
+
 @section('content')
-<h2>Detail Transaksi</h2>
-<ul class="list-group">
-  <li class="list-group-item"><strong>ID Janji Temu:</strong> {{ $transaksi['id_janji_temu'] }}</li>
-  <li class="list-group-item"><strong>Tanggal:</strong> {{ $transaksi['tanggal'] }}</li>
-  <li class="list-group-item"><strong>Jumlah Produk:</strong> {{ $transaksi['jumlah_produk'] }}</li>
-  <li class="list-group-item"><strong>Harga:</strong> {{ $transaksi['harga'] }}</li>
+<h1>Detail Transaksi</h1>
+
+<ul>
+    <li><strong>ID:</strong> {{ $transaksi->id_transaksi }}</li>
+    <li><strong>Janji Temu:</strong> {{ $transaksi->janji_temu->id_janjitemu }}</li>
+    <li><strong>Tanggal Transaksi:</strong> {{ $transaksi->tanggal_transaksi }}</li>
+    <li><strong>Jumlah Produk:</strong> {{ $transaksi->jumlah_produk }}</li>
+    <li><strong>Harga:</strong> {{ number_format($transaksi->harga, 0, ',', '.') }}</li>
 </ul>
-<a href="/transaksi" class="btn btn-secondary mt-3">Kembali</a>
+
+<a href="{{ route('transaksi.index') }}">⬅️ Kembali</a>
 @endsection

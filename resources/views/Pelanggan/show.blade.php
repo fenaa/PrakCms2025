@@ -1,13 +1,16 @@
 @extends('layouts.app')
-@section('title', 'Detail Pelanggan')
+
 @section('content')
-<h2>Detail Pelanggan</h2>
-<ul class="list-group">
-  <li class="list-group-item"><strong>Nama:</strong> {{ $pelanggan['nama'] }}</li>
-  <li class="list-group-item"><strong>Alamat:</strong> {{ $pelanggan['alamat'] }}</li>
-  <li class="list-group-item"><strong>Jenis Kelamin:</strong> {{ $pelanggan['jenis_kelamin'] }}</li>
-  <li class="list-group-item"><strong>Telepon:</strong> {{ $pelanggan['telepon'] }}</li>
-  <li class="list-group-item"><strong>Email:</strong> {{ $pelanggan['email'] }}</li>
+<h1>Detail Pelanggan</h1>
+
+<ul>
+    <li><strong>ID:</strong> {{ $pelanggan->id_pelanggan }}</li>
+    <li><strong>Nama:</strong> {{ $pelanggan->nama_pelanggan }}</li>
+    <li><strong>Alamat:</strong> {{ $pelanggan->alamat_pelanggan }}</li>
+    <li><strong>Jenis Kelamin:</strong> {{ $pelanggan->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</li>
+    <li><strong>Nomor Telepon:</strong> {{ $pelanggan->nomor_telpon }}</li>
+    <li><strong>Email:</strong> {{ $pelanggan->email }}</li>
 </ul>
-<a href="/pelanggan" class="btn btn-secondary mt-3">Kembali</a>
+
+<a href="{{ route('pelanggan.index') }}">⬅️ Kembali</a>
 @endsection

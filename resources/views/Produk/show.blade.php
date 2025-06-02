@@ -1,12 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Detail Produk')
+
 @section('content')
-<h2>Detail Produk</h2>
-<ul class="list-group">
-  <li class="list-group-item"><strong>ID:</strong> {{ $produk['id'] }}</li> 
-  <li class="list-group-item"><strong>Jenis:</strong> {{ $produk['jenis'] }}</li>
-  <li class="list-group-item"><strong>Stok:</strong> {{ $produk['stok'] }}</li>
-  <li class="list-group-item"><strong>Harga:</strong> {{ $produk['harga'] }}</li>
+<h1>Detail Produk</h1>
+
+<ul>
+    <li><strong>ID:</strong> {{ $produk->id_produk }}</li>
+    <li><strong>Jenis Produk:</strong> {{ $produk->jenis_produk }}</li>
+    <li><strong>Stok:</strong> {{ $produk->stok_produk }}</li>
+    <li><strong>Harga:</strong> {{ number_format($produk->harga_produk, 0, ',', '.') }}</li>
 </ul>
-<a href="/produk" class="btn btn-secondary mt-3">Kembali</a>
+
+<a href="{{ route('produk.index') }}">⬅️ Kembali</a>
 @endsection

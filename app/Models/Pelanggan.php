@@ -2,20 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pelanggan extends Model
 {
-    use HasFactory;
+    public $timestamps = false;
+    protected $primaryKey = 'id_pelanggan';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    public static function getAll()
-    {
-        return Pelanggan::all();
-    }
+    protected $fillable = [
+        'id_pelanggan',
+        'nama_pelanggan',
+        'alamat_pelanggan',
+        'jenis_kelamin',
+        'nomor_telpon',
+        'email',
+    ];
 
-    public static function find($id)
+    public function janji_temus()
     {
-        return Pelanggan::where('id', $id)->first();
+        return $this->hasMany(Janji_temu::class, 'id_pelanggan');
     }
 }

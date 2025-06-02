@@ -2,32 +2,24 @@
 
 namespace App\Models;
 
-class Transaksi
+use Illuminate\Database\Eloquent\Model;
+
+class Transaksi extends Model
 {
-    public static function all()
+    protected $primaryKey = 'id_transaksi';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'id_transaksi',
+        'id_janjitemu',
+        'tanggal_transaksi',
+        'jumlah_produk',
+        'harga',
+    ];
+
+    public function janji_temu()
     {
-        return [
-            [
-                'id' => 1,
-                'id_janji_temu' => 21,
-                'tanggal' => '2025-05-01',
-                'jumlah_produk' => 2,
-                'harga' => 150000,
-            ],
-            [
-                'id' => 2,
-                'id_janji_temu' => 22,
-                'tanggal' => '2025-05-02',
-                'jumlah_produk' => 3,
-                'harga' => 225000,
-            ],
-            [
-                'id' => 3,
-                'id_janji_temu' => 23,
-                'tanggal' => '2025-05-03',
-                'jumlah_produk' => 1,
-                'harga' => 75000,
-            ],
-        ];
+        return $this->belongsTo(JanjiTemu::class, 'id_janjitemu');
     }
 }

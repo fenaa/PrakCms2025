@@ -1,12 +1,20 @@
 @extends('layouts.app')
-@section('title', 'Hapus Produk')
+
 @section('content')
-<h2>Hapus Produk</h2>
-<div class="alert alert-danger">
-  <p>Apakah kamu yakin ingin menghapus data ini?</p>
-  <form>
-    <button class="btn btn-danger">Ya, Hapus</button>
-    <a href="/produk" class="btn btn-secondary">Batal</a>
-  </form>
-</div>
+<h1>Hapus Produk</h1>
+
+<p>Yakin ingin menghapus produk berikut?</p>
+
+<ul>
+    <li><strong>ID:</strong> {{ $produk->id_produk }}</li>
+    <li><strong>Jenis Produk:</strong> {{ $produk->jenis_produk }}</li>
+    <li><strong>Stok:</strong> {{ $produk->stok_produk }}</li>
+</ul>
+
+<form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit">🗑️ Hapus</button>
+    <a href="{{ route('produk.index') }}">❌ Batal</a>
+</form>
 @endsection

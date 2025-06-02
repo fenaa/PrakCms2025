@@ -1,14 +1,30 @@
 @extends('layouts.app')
-@section('title', 'Edit Pelanggan')
+
 @section('content')
-<h2>Edit Pelanggan</h2>
-<form>
-  <div class="mb-3"><label class="form-label">Nama</label><input type="text" class="form-control" value="{{ $pelanggan['nama'] }}"></div>
-  <div class="mb-3"><label class="form-label">Alamat</label><input type="text" class="form-control" value="{{ $pelanggan['alamat'] }}"></div>
-  <div class="mb-3"><label class="form-label">Jenis Kelamin</label><input type="text" class="form-control" value="{{ $pelanggan['jenis_kelamin'] }}"></div>
-  <div class="mb-3"><label class="form-label">Telepon</label><input type="text" class="form-control" value="{{ $pelanggan['telepon'] }}"></div>
-  <div class="mb-3"><label class="form-label">Email</label><input type="text" class="form-control" value="{{ $pelanggan['email'] }}"></div>
-  <button class="btn btn-primary">Simpan</button>
-  <a href="/pelanggan" class="btn btn-secondary">Batal</a>
+<h1>Edit Pelanggan</h1>
+
+<form action="{{ route('pelanggan.update', $pelanggan->id_pelanggan) }}" method="POST">
+    @csrf
+    @method('PUT')
+
+    <label>Nama Pelanggan:</label>
+    <input type="text" name="nama_pelanggan" value="{{ $pelanggan->nama_pelanggan }}" required><br>
+
+    <label>Alamat:</label>
+    <input type="text" name="alamat_pelanggan" value="{{ $pelanggan->alamat_pelanggan }}" required><br>
+
+    <label>Jenis Kelamin:</label>
+    <select name="jenis_kelamin" required>
+        <option value="L" {{ $pelanggan->jenis_kelamin == 'L' ? 'selected' : '' }}>Laki-laki</option>
+        <option value="P" {{ $pelanggan->jenis_kelamin == 'P' ? 'selected' : '' }}>Perempuan</option>
+    </select><br>
+
+    <label>Nomor Telepon:</label>
+    <input type="text" name="nomor_telpon" value="{{ $pelanggan->nomor_telpon }}" required><br>
+
+    <label>Email:</label>
+    <input type="email" name="email" value="{{ $pelanggan->email }}" required><br>
+
+    <button type="submit">💾 Update</button>
 </form>
 @endsection
