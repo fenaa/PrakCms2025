@@ -14,7 +14,7 @@ Route::get('/', function () {
 
 Route::resource('pelanggan', PelangganController::class);
 Route::resource('karyawan', KaryawanController::class);
-Route::resource('produk', ProdukController::class);
+Route::get('produk/create', [ProdukController::class, 'create'])->middleware('check.role')->name('produk.create');
+Route::resource('produk', ProdukController::class)->except(['create']);
 Route::resource('janjitemu', JanjiTemuController::class);
 Route::resource('transaksi', TransaksiController::class);
-
