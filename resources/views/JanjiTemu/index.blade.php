@@ -9,7 +9,26 @@
     <p style="color: green;">{{ session('success') }}</p>
 @endif
 
-<table border="1" cellpadding="8">
+{{-- Style Table --}}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: rgb(252, 152, 193);
+    }
+    tr:hover {
+        background-color: #fafafa;
+    }
+</style>
+
+<table>
     <thead>
         <tr>
             <th>ID</th>
@@ -31,12 +50,12 @@
             <td>{{ $jt->tanggal }}</td>
             <td>{{ $jt->waktu }}</td>
             <td>
-                <a href="{{ route('janjitemu.show', $jt->id_janjitemu) }}">👁️</a>
-                <a href="{{ route('janjitemu.edit', $jt->id_janjitemu) }}">✏️</a>
+                <a href="{{ route('janjitemu.show', $jt->id_janjitemu) }}">👁️ Lihat</a>
+                <a href="{{ route('janjitemu.edit', $jt->id_janjitemu) }}">✏️Edit</a>
                 <form action="{{ route('janjitemu.destroy', $jt->id_janjitemu) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" onclick="return confirm('Yakin ingin hapus?')">🗑️</button>
+                    <button type="submit" onclick="return confirm('Yakin ingin hapus?')">🗑️ Hapus</button>
                 </form>
             </td>
         </tr>

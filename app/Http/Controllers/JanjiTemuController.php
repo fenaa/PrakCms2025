@@ -7,6 +7,7 @@ use App\Models\Pelanggan;
 use App\Models\Karyawan;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class JanjiTemuController extends Controller
 {
@@ -31,8 +32,11 @@ class JanjiTemuController extends Controller
             'id_karyawan' => 'required|exists:karyawans,id_karyawan',
             'id_produk' => 'required|exists:produks,id_produk',
             'tanggal' => 'required|date',
-            'waktu' => 'required',
+            'waktu' => 'required|string|max:5',
         ]);
+
+        // Format tanggal menjadi Y-m-d agar Oracle bisa terima
+        $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
 
         $validated['id_janjitemu'] = 'JT' . strtoupper(uniqid());
 
@@ -65,8 +69,10 @@ class JanjiTemuController extends Controller
             'id_karyawan' => 'required|exists:karyawans,id_karyawan',
             'id_produk' => 'required|exists:produks,id_produk',
             'tanggal' => 'required|date',
-            'waktu' => 'required',
+            'waktu' => 'required|string|max:5',
         ]);
+
+        $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
 
         $janji_temu->update($validated);
 

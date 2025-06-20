@@ -5,7 +5,26 @@
 
 <a href="{{ route('transaksi.create') }}">➕ Tambah Transaksi</a>
 
-<table border="1" cellpadding="8">
+{{-- Style Table --}}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: rgb(252, 152, 193);
+    }
+    tr:hover {
+        background-color: #fafafa;
+    }
+</style>
+
+<table>
     <thead>
         <tr>
             <th>ID Transaksi</th>
@@ -27,7 +46,11 @@
             <td>
                 <a href="{{ route('transaksi.show', $t->id_transaksi) }}">👁️ Lihat</a> |
                 <a href="{{ route('transaksi.edit', $t->id_transaksi) }}">✏️ Edit</a> |
-                <a href="{{ route('transaksi.delete', $t->id_transaksi) }}">🗑️ Hapus</a>
+                <form action="{{ route('transaksi.destroy', $t->id_transaksi) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Yakin ingin menghapus transaksi ini?')">🗑️ Hapus</button>
+                </form>
             </td>
         </tr>
         @endforeach

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class JanjiTemu extends Model
 {
@@ -22,17 +21,7 @@ class JanjiTemu extends Model
         'waktu',
     ];
 
-    // Mutator untuk menyimpan tanggal dalam format Y-m-d
-    public function setTanggalAttribute($value)
-    {
-        $this->attributes['tanggal'] = Carbon::parse($value)->format('Y-m-d');
-    }
-
-    // Accessor untuk menampilkan tanggal dengan format d-M-Y
-    public function getTanggalAttribute($value)
-    {
-        return Carbon::parse($value)->format('d-M-Y');
-    }
+    // Tidak perlu accessor/mutator untuk tanggal maupun waktu
 
     public function pelanggan()
     {
