@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class PelangganController extends Controller
 {
@@ -28,26 +29,35 @@ class PelangganController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_pelanggan'    => 'required|string|max:100',
-            'alamat_pelanggan'  => 'required|string|max:255',
-            'jenis_kelamin'     => 'required|in:L,P',
-            'nomor_telpon'      => 'required|string|max:20',
-            'email'             => 'required|email|max:100',
-        ], [
-            'nama_pelanggan.required'   => 'Nama pelanggan wajib diisi.',
-            'alamat_pelanggan.required' => 'Alamat wajib diisi.',
-            'jenis_kelamin.required'    => 'Jenis kelamin wajib diisi.',
-            'nomor_telpon.required'     => 'Nomor telepon wajib diisi.',
-            'email.required'            => 'Email wajib diisi.',
-            'email.email'               => 'Email tidak valid.',
-        ]);
+        try {
+            Log::info('Mulai proses simpan pelanggan');
 
-        $validated['id_pelanggan'] = 'PLG' . strtoupper(uniqid());
+            $validated = $request->validate([
+                'nama_pelanggan'    => 'required|string|max:100',
+                'alamat_pelanggan'  => 'required|string|max:255',
+                'jenis_kelamin'     => 'required|in:L,P',
+                'nomor_telpon'      => 'required|string|max:20',
+                'email'             => 'required|email|max:100',
+            ], [
+                'nama_pelanggan.required'   => 'Nama pelanggan wajib diisi.',
+                'alamat_pelanggan.required' => 'Alamat wajib diisi.',
+                'jenis_kelamin.required'    => 'Jenis kelamin wajib diisi.',
+                'nomor_telpon.required'     => 'Nomor telepon wajib diisi.',
+                'email.required'            => 'Email wajib diisi.',
+                'email.email'               => 'Email tidak valid.',
+            ]);
 
-        Pelanggan::create($validated);
+            $validated['id_pelanggan'] = 'PLG' . strtoupper(uniqid());
 
-        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
+            Pelanggan::create($validated);
+
+            Log::info('Berhasil menyimpan data pelanggan', $validated);
+
+            return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menyimpan pelanggan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan pelanggan.');
+        }
     }
 
     public function edit($id)
@@ -63,6 +73,8 @@ class PelangganController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            Log::info('Mulai proses update pelanggan dengan ID: ' . $id);
+
             $pelanggan = Pelanggan::findOrFail($id);
 
             $validated = $request->validate([
@@ -82,21 +94,35 @@ class PelangganController extends Controller
 
             $pelanggan->update($validated);
 
+            Log::info('Berhasil update pelanggan dengan ID: ' . $id, $validated);
+
             return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil diperbarui!');
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat update: ' . $id);
             return redirect()->route('pelanggan.index')->with('error', 'Data pelanggan tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal update pelanggan dengan ID: ' . $id . ' - ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui pelanggan.');
         }
     }
 
     public function destroy($id)
     {
         try {
+            Log::info('Mulai proses hapus pelanggan ID: ' . $id);
+
             $pelanggan = Pelanggan::findOrFail($id);
             $pelanggan->delete();
 
+            Log::info('Berhasil menghapus pelanggan ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dihapus!');
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat hapus: ' . $id);
             return redirect()->route('pelanggan.index')->with('error', 'Data pelanggan tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus pelanggan ID: ' . $id . ' - ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus pelanggan.');
         }
     }
 
