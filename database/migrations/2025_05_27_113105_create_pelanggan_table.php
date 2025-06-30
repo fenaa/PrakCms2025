@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->string('nomor_telpon', 20);
             $table->string('email', 100);
+            $table->timestamps(); // ✅ Menambahkan created_at & updated_at
         });
     }
 

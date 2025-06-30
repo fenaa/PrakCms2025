@@ -8,15 +8,13 @@
 
     <style>
         body {
-            background-color: #fff0f6; /* latar belakang yang lembut */
+            background-color: #fff0f6;
         }
 
-        /* Navbar hot pink */
         .navbar {
             background-color: #FF69B4 !important;
         }
 
-        /* Teks navbar putih agar kontras */
         .navbar .nav-link,
         .navbar-brand {
             color: white !important;
@@ -26,7 +24,6 @@
             color: #ffd1e8 !important;
         }
 
-        /* Tombol utama warna hot pink */
         .btn-primary {
             background-color: #FF69B4;
             border-color: #FF69B4;
@@ -37,7 +34,6 @@
             border-color: #e55a9d;
         }
 
-        /* Tombol outline hot pink */
         .btn-outline-primary {
             border-color: #FF69B4;
             color: #FF69B4;
@@ -47,18 +43,15 @@
             color: white;
         }
 
-        /* Footer hot pink */
         footer {
             background-color: #FF69B4 !important;
             color: white;
         }
 
-        /* Tabel tetap putih agar nyaman dibaca */
         .table {
             background-color: white;
         }
 
-        /* Link aksi di tabel */
         .action-links a {
             margin: 0 5px;
         }
@@ -70,13 +63,6 @@
     @include('partials.navbar')
 
     <div class="container py-4">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         @yield('content')
     </div>
 

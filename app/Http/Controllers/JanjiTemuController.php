@@ -7,83 +7,146 @@ use App\Models\Pelanggan;
 use App\Models\Karyawan;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 
 class JanjiTemuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $janjiTemus = JanjiTemu::with(['pelanggan', 'karyawan', 'produk'])->get();
-        return view('janjitemu.index', compact('janjiTemus'));
+        try {
+            $query = JanjiTemu::with(['pelanggan', 'karyawan', 'produk']);
+
+            // Pencarian berdasarkan nama pelanggan
+            if ($request->filled('search')) {
+                $query->whereHas('pelanggan', function ($q) use ($request) {
+                    $q->where('nama_pelanggan', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $janjiTemus = $query
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu', 'desc')
+                ->get();
+
+            Log::info('Mengakses daftar janji temu');
+
+            return view('janjitemu.index', compact('janjiTemus'));
+        } catch (\Exception $e) {
+            Log::error('Gagal menampilkan daftar janji temu', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Gagal menampilkan data janji temu.');
+        }
     }
 
     public function create()
     {
-        $pelanggans = Pelanggan::all();
-        $karyawans = Karyawan::all();
-        $produks = Produk::all();
-        return view('janjitemu.create', compact('pelanggans', 'karyawans', 'produks'));
+        Log::info('Mengakses halaman tambah janji temu');
+        return view('janjitemu.create', [
+            'pelanggans' => Pelanggan::all(),
+            'karyawans'  => Karyawan::all(),
+            'produks'    => Produk::all(),
+        ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'id_pelanggan' => 'required|exists:pelanggans,id_pelanggan',
-            'id_karyawan' => 'required|exists:karyawans,id_karyawan',
-            'id_produk' => 'required|exists:produks,id_produk',
-            'tanggal' => 'required|date',
-            'waktu' => 'required|string|max:5',
+            'id_karyawan'  => 'required|exists:karyawans,id_karyawan',
+            'id_produk'    => 'required|exists:produks,id_produk',
+            'tanggal'      => 'required|date',
+            'waktu'        => 'required|string|max:5',
         ]);
 
-        // Format tanggal menjadi Y-m-d agar Oracle bisa terima
-        $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
+        try {
+            $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
+            $validated['id_janjitemu'] = 'JT' . strtoupper(uniqid());
 
-        $validated['id_janjitemu'] = 'JT' . strtoupper(uniqid());
+            JanjiTemu::create($validated);
 
-        JanjiTemu::create($validated);
+            Log::info('Berhasil menambahkan janji temu', ['data' => $validated]);
 
-        return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil ditambahkan!');
+            return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menambahkan janji temu', ['error' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan janji temu.');
+        }
     }
 
     public function show($id)
     {
-        $janji_temu = JanjiTemu::with(['pelanggan', 'karyawan', 'produk'])->findOrFail($id);
-        return view('janjitemu.show', compact('janji_temu'));
+        try {
+            $janji_temu = JanjiTemu::with(['pelanggan', 'karyawan', 'produk'])->findOrFail($id);
+            Log::info('Melihat detail janji temu', ['id' => $id]);
+            return view('janjitemu.show', compact('janji_temu'));
+        } catch (ModelNotFoundException $e) {
+            Log::error('Janji temu tidak ditemukan saat melihat detail', ['id' => $id]);
+            return redirect()->route('janjitemu.index')->with('error', 'Data janji temu tidak ditemukan.');
+        }
     }
 
     public function edit($id)
     {
-        $janji_temu = JanjiTemu::findOrFail($id);
-        $pelanggans = Pelanggan::all();
-        $karyawans = Karyawan::all();
-        $produks = Produk::all();
-        return view('janjitemu.edit', compact('janji_temu', 'pelanggans', 'karyawans', 'produks'));
+        try {
+            $janji_temu = JanjiTemu::findOrFail($id);
+            Log::info('Mengakses halaman edit janji temu', ['id' => $id]);
+
+            return view('janjitemu.edit', [
+                'janji_temu' => $janji_temu,
+                'pelanggans' => Pelanggan::all(),
+                'karyawans'  => Karyawan::all(),
+                'produks'    => Produk::all(),
+            ]);
+        } catch (ModelNotFoundException $e) {
+            Log::error('Janji temu tidak ditemukan saat edit', ['id' => $id]);
+            return redirect()->route('janjitemu.index')->with('error', 'Data janji temu tidak ditemukan.');
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $janji_temu = JanjiTemu::findOrFail($id);
-
         $validated = $request->validate([
             'id_pelanggan' => 'required|exists:pelanggans,id_pelanggan',
-            'id_karyawan' => 'required|exists:karyawans,id_karyawan',
-            'id_produk' => 'required|exists:produks,id_produk',
-            'tanggal' => 'required|date',
-            'waktu' => 'required|string|max:5',
+            'id_karyawan'  => 'required|exists:karyawans,id_karyawan',
+            'id_produk'    => 'required|exists:produks,id_produk',
+            'tanggal'      => 'required|date',
+            'waktu'        => 'required|string|max:5',
         ]);
 
-        $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
+        try {
+            $janji_temu = JanjiTemu::findOrFail($id);
+            $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
 
-        $janji_temu->update($validated);
+            $janji_temu->update($validated);
 
-        return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil diperbarui!');
+            Log::info('Berhasil memperbarui janji temu', ['id' => $id]);
+
+            return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil diperbarui!');
+        } catch (ModelNotFoundException $e) {
+            Log::error('Janji temu tidak ditemukan saat update', ['id' => $id]);
+            return redirect()->route('janjitemu.index')->with('error', 'Data janji temu tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui janji temu', ['id' => $id, 'error' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui janji temu.');
+        }
     }
 
     public function destroy($id)
     {
-        $janji_temu = JanjiTemu::findOrFail($id);
-        $janji_temu->delete();
+        try {
+            $janji_temu = JanjiTemu::findOrFail($id);
+            $janji_temu->delete();
 
-        return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil dihapus!');
+            Log::info('Berhasil menghapus janji temu', ['id' => $id]);
+
+            return redirect()->route('janjitemu.index')->with('success', 'Janji Temu berhasil dihapus!');
+        } catch (ModelNotFoundException $e) {
+            Log::error('Janji temu tidak ditemukan saat hapus', ['id' => $id]);
+            return redirect()->route('janjitemu.index')->with('error', 'Data janji temu tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus janji temu', ['id' => $id, 'error' => $e->getMessage()]);
+            return redirect()->route('janjitemu.index')->with('error', 'Terjadi kesalahan saat menghapus janji temu.');
+        }
     }
 }

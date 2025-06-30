@@ -14,7 +14,7 @@
 <form action="{{ route('karyawan.destroy', $karyawan->id_karyawan) }}" method="POST">
     @csrf
     @method('DELETE')
-    <button type="submit">🗑️ Hapus</button>
-    <a href="{{ route('karyawan.index') }}">❌ Batal</a>
+    <button type="submit" class="btn btn-danger">🗑️ Ya, Hapus</button>
+    <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">❌ Batal</a>
 </form>
 @endsection

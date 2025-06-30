@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use App\Models\JanjiTemu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransaksiController extends Controller
 {
@@ -74,7 +76,11 @@ class TransaksiController extends Controller
 
     public function show($id)
     {
-        $transaksi = Transaksi::with('janji_temu')->findOrFail($id);
-        return view('transaksi.show', compact('transaksi'));
+        try {
+            $transaksi = Transaksi::with('janji_temu')->findOrFail($id);
+            return view('transaksi.show', compact('transaksi'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('transaksi.index')->with('error', 'Data transaksi tidak ditemukan.');
+        }
     }
 }
