@@ -8,10 +8,14 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\JanjiTemuController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('home');
 });
+
+// Route dashboard ringkasan
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::resource('pelanggan', PelangganController::class);
 Route::resource('karyawan', KaryawanController::class);
@@ -24,4 +28,3 @@ Route::resource('transaksi', TransaksiController::class);
 Route::get('/upload', [ImageController::class, 'create'])->name('image.create');
 Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
 Route::delete('/upload/{id}', [ImageController::class, 'destroy'])->name('image.destroy');
-

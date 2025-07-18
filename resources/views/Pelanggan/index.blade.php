@@ -41,6 +41,33 @@
         tr:hover {
             background-color: #fafafa;
         }
+
+        /* Cute Buttons */
+        .btn-cute {
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 0 2px;
+        }
+
+        .btn-lihat {
+            background-color: #d1c4e9;
+            color: #4a148c;
+        }
+
+        .btn-edit {
+            background-color: #b2dfdb;
+            color: #004d40;
+        }
+
+        .btn-hapus {
+            background-color: #ffcdd2;
+            color: #b71c1c;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 
     {{-- Tabel Data --}}
@@ -66,12 +93,12 @@
                     <td>{{ $p->nomor_telpon }}</td>
                     <td>{{ $p->email }}</td>
                     <td>
-                        <a href="{{ route('pelanggan.show', $p->id_pelanggan) }}">👁️ Lihat</a> |
-                        <a href="{{ route('pelanggan.edit', $p->id_pelanggan) }}">✏️ Edit</a> |
-                        <form action="{{ route('pelanggan.destroy', $p->id_pelanggan) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('pelanggan.show', $p->id_pelanggan) }}" class="btn-cute btn-lihat">👁️ Lihat</a>
+                        <a href="{{ route('pelanggan.edit', $p->id_pelanggan) }}" class="btn-cute btn-edit">✏️ Edit</a>
+                        <form action="{{ route('pelanggan.destroy', $p->id_pelanggan) }}" method="POST" class="form-hapus" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')">🗑️ Hapus</button>
+                            <button type="button" class="btn-cute btn-hapus" onclick="konfirmasiHapus(this)">🗑️ Hapus</button>
                         </form>
                     </td>
                 </tr>
@@ -90,4 +117,31 @@
             @endforelse
         </tbody>
     </table>
+
+    {{-- Modal Hapus --}}
+    <div id="modalHapus" style="display:none; position:fixed; inset:0; background-color:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#fff; padding:20px; border-radius:10px; text-align:center;">
+            <p>Yakin ingin menghapus data ini?</p>
+            <button onclick="submitHapus()" style="background-color:#e57373; color:white; border:none; padding:6px 12px; margin-right:10px; border-radius:6px;">Ya</button>
+            <button onclick="batalHapus()" style="background-color:#eee; border:none; padding:6px 12px; border-radius:6px;">Batal</button>
+        </div>
+    </div>
+
+    <script>
+        let formToDelete = null;
+
+        function konfirmasiHapus(button) {
+            formToDelete = button.closest('form');
+            document.getElementById('modalHapus').style.display = 'flex';
+        }
+
+        function submitHapus() {
+            if (formToDelete) formToDelete.submit();
+        }
+
+        function batalHapus() {
+            formToDelete = null;
+            document.getElementById('modalHapus').style.display = 'none';
+        }
+    </script>
 @endsection

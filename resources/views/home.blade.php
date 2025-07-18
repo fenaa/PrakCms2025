@@ -67,6 +67,14 @@
     <a href="{{ route('janjitemu.create') }}" class="btn btn-lg btn-gold shadow-sm">Buat Janji Sekarang</a>
 </div>
 
+{{-- Bagian Instagram --}}
+<div class="text-center py-4">
+    <a href="https://www.instagram.com/trifena._/profilecard/?igsh=dmtsdWQ4dDg4YW81" target="_blank" class="text-decoration-none">
+        <i class="bi bi-instagram" style="font-size: 1.5rem; color: var(--main-color, #C28840);"></i>
+        <span class="ms-2 theme-text">Ikuti kami di Instagram</span>
+    </a>
+</div>
+
 <div class="theme-switcher">
     <button class="theme-button" style="background-color: #FF69B4;" onclick="applyTheme('#FF69B4', '#ffe4f1', '#fff2f8')"></button>
     <button class="theme-button" style="background-color: #FF7F50;" onclick="applyTheme('#FF7F50', '#ffe5b4', '#fff2e5')"></button>

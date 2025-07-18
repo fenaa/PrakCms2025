@@ -6,6 +6,7 @@ use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class KaryawanController extends Controller
 {
